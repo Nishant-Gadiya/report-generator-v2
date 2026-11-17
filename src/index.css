@@ -30,3 +30,18 @@ body { margin: 0; font-family: sans-serif; background: #e5e7eb; }
 
 .students { width: 80%; margin: 0 auto; }
 .student-row { display: flex; justify-content: space-between; text-align: left; }
+
+.layout { display: grid; grid-template-columns: 460px 1fr; height: 100vh; }
+.editor-pane { overflow-y: auto; padding: 16px; background: #fff; border-right: 1px solid #ddd; }
+.preview-pane { overflow-y: auto; }
+.editor-top { display: flex; gap: 16px; margin: 12px 0; }
+.cover-editor h3 { margin: 18px 0 6px; font-size: 14px; text-transform: uppercase; color: #555; }
+
+.slot-row { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid #eee; }
+.slot-main { flex: 1; }
+.slot-main textarea { width: 100%; box-sizing: border-box; font: inherit; resize: vertical; }
+.slot-style { display: flex; gap: 4px; align-items: center; }
+.btn-bold { font-weight: 700; width: 28px; }
+.btn-bold.active { background: #333; color: #fff; }
+.student-edit-row { display: flex; gap: 4px; margin-bottom: 4px; }
+.student-edit-row input { flex: 1; min-width: 0; }

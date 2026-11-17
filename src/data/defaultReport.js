@@ -5,9 +5,9 @@ export function createEmptyReport() {
     cover: {
       ...structuredClone(VTU_STYLE),
       students: [
-        { name: "Student Name 1", usn: "USN" },
-        { name: "Student Name 2", usn: "USN" },
-      ],
+  { id: crypto.randomUUID(), name: "Student Name 1", usn: "USN" },
+  { id: crypto.randomUUID(), name: "Student Name 2", usn: "USN" },
+],
       images: {},
     },
     prelims: { acknowledgement: null, abstract: null },
