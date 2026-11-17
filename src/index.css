@@ -1,1 +1,32 @@
-body { margin: 0; font-family: sans-serif; }
+body { margin: 0; font-family: sans-serif; background: #e5e7eb; }
+
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  background: white;
+  margin: 20px auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  padding: 10mm;            /* gap between page edge and border */
+}
+
+
+.cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 277mm;            /* 297mm minus 10mm padding top and bottom */
+  box-sizing: border-box;
+  padding: 10mm;            /* gap between border and text */
+  text-align: center;
+  font-family: "Times New Roman", serif;
+}
+.cover-zone { display: flex; flex-direction: column; gap: 6pt; }
+.zone-middle { flex: 1; justify-content: space-evenly; }
+
+
+.cover-single { border: 1.5px solid #000; }
+.cover-double { border: 6px double #000; }
+
+.students { width: 80%; margin: 0 auto; }
+.student-row { display: flex; justify-content: space-between; text-align: left; }
