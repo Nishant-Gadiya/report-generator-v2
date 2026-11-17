@@ -10,9 +10,18 @@ export function createEmptyReport() {
 ],
       images: {},
     },
-    prelims: { acknowledgement: null, abstract: null },
+   prelims: {
+  acknowledgement: { on: false, text: "" },
+  abstract: { on: false, text: "", keywords: "" },
+},
     sections: [],
     references: [],
     style: { fontFamily: "Times New Roman", headingSize: 14, bodySize: 12, lineSpacing: 1.5 },
+    pageStyle: {
+  mode: "none",          // "none" | "single" | "double" | "headerFooter"
+  headerText: "",
+  footerText: "",
+  showPageNumber: true,
+},
   };
 }

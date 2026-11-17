@@ -1,6 +1,5 @@
-import { newBlock, newSection, newSubsection } from "../data/factories";
+import { newBlock, newSection } from "../data/factories";
 
-// move an item up (-1) or down (+1) in a list
 export function moveItem(list, index, dir) {
   const j = index + dir;
   if (j < 0 || j >= list.length) return list;
@@ -9,57 +8,51 @@ export function moveItem(list, index, dir) {
   return copy;
 }
 
-// find a section OR subsection by id and change it
-function mapContainer(sections, id, fn) {
-  return sections.map((s) => {
-    const next = s.id === id ? fn(s) : s;
-    return {
-      ...next,
-      subsections: next.subsections.map((sub) => (sub.id === id ? fn(sub) : sub)),
-    };
-  });
+// find the section/subsection with this id (at any depth) and change it
+function mapTree(list, id, fn) {
+  return list.map((n) =>
+    n.id === id ? fn(n) : { ...n, children: mapTree(n.children, id, fn) }
+  );
 }
 
 export const addSection = (sections) => [...sections, newSection()];
 
-export const addSubsection = (sections, sectionId) =>
-  mapContainer(sections, sectionId, (s) => ({
-    ...s, subsections: [...s.subsections, newSubsection()],
-  }));
+export const addChild = (sections, parentId) =>
+  mapTree(sections, parentId, (n) => ({ ...n, children: [...n.children, newSection()] }));
 
 export const updateContainer = (sections, id, patch) =>
-  mapContainer(sections, id, (c) => ({ ...c, ...patch }));
+  mapTree(sections, id, (n) => ({ ...n, ...patch }));
 
-export const removeContainer = (sections, id) =>
-  sections
-    .filter((s) => s.id !== id)
-    .map((s) => ({ ...s, subsections: s.subsections.filter((sub) => sub.id !== id) }));
+export const removeContainer = (list, id) =>
+  list
+    .filter((n) => n.id !== id)
+    .map((n) => ({ ...n, children: removeContainer(n.children, id) }));
 
-export const moveSection = (sections, index, dir) => moveItem(sections, index, dir);
-
-export const moveSubsection = (sections, sectionId, index, dir) =>
-  mapContainer(sections, sectionId, (s) => ({
-    ...s, subsections: moveItem(s.subsections, index, dir),
-  }));
+// move a section or subsection up (-1) or down (+1) among its neighbours
+export function moveContainer(list, id, dir) {
+  const index = list.findIndex((n) => n.id === id);
+  if (index !== -1) return moveItem(list, index, dir);
+  return list.map((n) => ({ ...n, children: moveContainer(n.children, id, dir) }));
+}
 
 export const addBlock = (sections, containerId, type, index) =>
-  mapContainer(sections, containerId, (c) => {
+  mapTree(sections, containerId, (c) => {
     const blocks = [...c.blocks];
-    blocks.splice(index, 0, newBlock(type)); // insert at that position
+    blocks.splice(index, 0, newBlock(type));
     return { ...c, blocks };
   });
 
 export const updateBlock = (sections, containerId, blockId, patch) =>
-  mapContainer(sections, containerId, (c) => ({
+  mapTree(sections, containerId, (c) => ({
     ...c, blocks: c.blocks.map((b) => (b.id === blockId ? { ...b, ...patch } : b)),
   }));
 
 export const removeBlock = (sections, containerId, blockId) =>
-  mapContainer(sections, containerId, (c) => ({
+  mapTree(sections, containerId, (c) => ({
     ...c, blocks: c.blocks.filter((b) => b.id !== blockId),
   }));
 
 export const moveBlock = (sections, containerId, index, dir) =>
-  mapContainer(sections, containerId, (c) => ({
+  mapTree(sections, containerId, (c) => ({
     ...c, blocks: moveItem(c.blocks, index, dir),
   }));

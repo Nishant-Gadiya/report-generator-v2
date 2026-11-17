@@ -45,3 +45,59 @@ body { margin: 0; font-family: sans-serif; background: #e5e7eb; }
 .btn-bold.active { background: #333; color: #fff; }
 .student-edit-row { display: flex; gap: 4px; margin-bottom: 4px; }
 .student-edit-row input { flex: 1; min-width: 0; }
+
+/* body page */
+.body-page {
+  font-family: var(--font);
+  font-size: var(--body);
+  line-height: var(--lh);
+  padding: 25mm 20mm;
+  text-align: justify;
+}
+.body-page h2, .body-page h3, .body-page h4, .body-page h5 { font-size: var(--heading); }
+.body-page h2 { text-transform: uppercase; }
+.body-page h3 { font-size: var(--heading); }
+.body-page figure { margin: 12pt 0; text-align: center; }
+.body-page img { max-width: 100%; }
+.body-page figcaption, .table-caption { text-align: center; font-weight: 700; margin: 6pt 0; }
+.body-page table { border-collapse: collapse; width: 100%; margin-bottom: 12pt; }
+.body-page th, .body-page td { border: 1px solid #000; padding: 4pt 6pt; }
+
+/* editor */
+.tabs { display: flex; gap: 6px; margin: 12px 0; }
+.tabs button.active { background: #333; color: #fff; }
+.section-card { border: 1px solid #ccc; border-radius: 8px; padding: 10px; margin: 12px 0; }
+.subsection-card { margin: 10px 0 10px 18px; padding-left: 10px; border-left: 3px solid #ddd; }
+.card-head, .block-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.title-input { width: 100%; box-sizing: border-box; padding: 6px; margin-bottom: 6px; font-weight: 700; }
+.block-box { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 6px; padding: 8px; margin: 8px 0; }
+.block-box textarea, .block-box input { width: 100%; box-sizing: border-box; margin-top: 4px; font: inherit; }
+.add-bar { display: flex; gap: 4px; margin: 6px 0; }
+.add-bar button { font-size: 12px; }
+.table-edit input { width: 90px; margin: 0; }
+.hint { color: #777; font-size: 12px; }
+
+/* prelim pages */
+.prelim-page {
+  font-family: var(--font);
+  font-size: var(--body);
+  line-height: var(--lh);
+  padding: 25mm 20mm;
+  box-sizing: border-box;
+  text-align: justify;
+}
+.prelim-title { text-align: center; font-size: var(--heading); margin-bottom: 18pt; }
+
+/* references */
+.references ol { list-style: none; padding: 0; margin: 0; }
+.references li { margin-bottom: 8pt; padding-left: 28pt; text-indent: -28pt; }
+.ref-no { display: inline-block; min-width: 28pt; }
+
+/* editor */
+.prelim-card { border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin: 10px 0; }
+.prelim-toggle { display: flex; gap: 8px; align-items: center; font-weight: 700; }
+.prelim-card textarea, .prelim-card input[type="text"], .prelim-card input:not([type]) {
+  width: 100%; box-sizing: border-box; margin-top: 8px; font: inherit;
+}
+
+.ref-link { color: #0000ee; text-decoration: underline; word-break: break-all; }

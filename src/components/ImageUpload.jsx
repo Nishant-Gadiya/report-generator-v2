@@ -1,6 +1,6 @@
 import { fileToDataUrl } from "../lib/images";
 
-export default function ImageUpload({ label, value, onChange }) {
+export default function ImageUpload({ label, value, onChange, maxWidth = 400 }) {
   async function handleFile(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -9,7 +9,7 @@ export default function ImageUpload({ label, value, onChange }) {
       return;
     }
     try {
-      onChange(await fileToDataUrl(file));
+      onChange(await fileToDataUrl(file, maxWidth));
     } catch {
       alert("Could not read that image. Try a different file.");
     }

@@ -6,9 +6,7 @@ export const newBlock = (type) => {
 };
 
 export const newSection = () => ({
-  id: crypto.randomUUID(), title: "", blocks: [], subsections: [],
+  id: crypto.randomUUID(), title: "", blocks: [], children: [],
 });
 
-export const newSubsection = () => ({
-  id: crypto.randomUUID(), title: "", blocks: [],
-});
+export const newReference = () => ({ id: crypto.randomUUID(), text: "" });
