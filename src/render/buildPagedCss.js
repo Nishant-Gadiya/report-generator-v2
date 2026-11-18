@@ -1,43 +1,49 @@
+import { fontOf } from "../data/fonts";
+
 // makes header/footer text safe to put inside CSS
 const cssStr = (s) =>
   `"${String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\s+/g, " ")}"`;
 
+const MARGINS = {
+  narrow: { v: 20, h: 15 },
+  normal: { v: 25, h: 20 },
+  wide: { v: 30, h: 25 },
+};
+
 export function buildPagedCss(report) {
-  const { style, pageStyle: ps } = report;
-  const font = `"${style.fontFamily}", serif`;
+  const { style, pageStyle: ps, layout } = report;
+  const font = fontOf(style.fontId).stack;
+  const m = MARGINS[layout.margins] ?? MARGINS.normal;
   const headerFooter = ps.mode === "headerFooter";
   const border =
     ps.mode === "single" ? "1.5pt solid #000" : ps.mode === "double" ? "4.5pt double #000" : "";
 
-  // header, footer and page number boxes for one kind of page
- const box = (name, content, size) =>
-  `@${name} { content: ${content}; font-family: ${font}; font-size: ${size}; }`;
+  const box = (name, content, size) =>
+    `@${name} { content: ${content}; font-family: ${font}; font-size: ${size}; }`;
 
-const margins = (numberFormat) => {
-  let css = "";
+  const margins = (numberFormat) => {
+    let css = "";
+    if (headerFooter) {
+      ["left", "center", "right"].forEach((pos) => {
+        const text = ps.header[pos].trim();
+        if (text) css += box(`top-${pos}`, cssStr(text), "10pt");
 
-  if (headerFooter) {
-    ["left", "center", "right"].forEach((pos) => {
-      const text = ps.header[pos].trim();
-      if (text) css += box(`top-${pos}`, cssStr(text), "10pt");
+        const slot = ps.footer[pos];
+        if (slot.kind === "text" && slot.text.trim()) {
+          css += box(`bottom-${pos}`, cssStr(slot.text), "10pt");
+        }
+        if (slot.kind === "pageNumber") {
+          css += box(`bottom-${pos}`, `counter(page${numberFormat})`, "11pt");
+        }
+      });
+    } else if (ps.showPageNumber) {
+      css += box("bottom-center", `counter(page${numberFormat})`, "11pt");
+    }
+    return css;
+  };
 
-      const slot = ps.footer[pos];
-      if (slot.kind === "text" && slot.text.trim()) {
-        css += box(`bottom-${pos}`, cssStr(slot.text), "10pt");
-      }
-      if (slot.kind === "pageNumber") {
-        css += box(`bottom-${pos}`, `counter(page${numberFormat})`, "11pt");
-      }
-    });
-  } else if (ps.showPageNumber) {
-    css += box("bottom-center", `counter(page${numberFormat})`, "11pt");
-  }
-
-  return css;
-};
   const borderCss = border
-  ? `
-.pagedjs_page { position: relative; }
+    ? `
 .pagedjs_page:not(.pagedjs_cover_page)::before {
   content: "";
   position: absolute;
@@ -46,31 +52,33 @@ const margins = (numberFormat) => {
   pointer-events: none;
   z-index: 10;
 }`
-  : "";
+    : "";
 
-const lineLayers = [];
-if (headerFooter && ps.headerLine) lineLayers.push("top");
-if (headerFooter && ps.footerLine) lineLayers.push("bottom");
+  const lineLayers = [];
+  if (headerFooter && ps.headerLine) lineLayers.push("top");
+  if (headerFooter && ps.footerLine) lineLayers.push("bottom");
 
-const linesCss = lineLayers.length
-  ? `
+  const linesCss = lineLayers.length
+    ? `
 .pagedjs_page:not(.pagedjs_cover_page)::after {
   content: "";
   position: absolute;
-  top: 0; bottom: 0; left: 20mm; right: 20mm;
+  top: 0; bottom: 0; left: ${m.h}mm; right: ${m.h}mm;
   pointer-events: none;
   background-repeat: no-repeat;
   background-image: ${lineLayers.map(() => "linear-gradient(#000, #000)").join(", ")};
-  background-position: ${lineLayers.map((l) => `left 0 ${l} 21mm`).join(", ")};
+  background-position: ${lineLayers.map((l) => `left 0 ${l} ${m.v - 4}mm`).join(", ")};
   background-size: ${lineLayers.map(() => "100% 0.75pt").join(", ")};
 }`
-  : "";
+    : "";
+
+  const refsBreak = layout.referencesNewPage ? ".main-doc .references { break-before: page; }" : "";
 
   return `
-@page { size: A4; margin: 25mm 20mm; }
+@page { size: A4; margin: ${m.v}mm ${m.h}mm; }
 @page cover { margin: 10mm; }
-@page prelims { margin: 25mm 20mm; ${margins(", lower-roman")} }
-@page main { margin: 25mm 20mm; ${margins("")} }
+@page prelims { margin: ${m.v}mm ${m.h}mm; ${margins(", lower-roman")} }
+@page main { margin: ${m.v}mm ${m.h}mm; ${margins("")} }
 
 .cover-doc { page: cover; }
 .prelims-doc { page: prelims; counter-reset: page 1; }
@@ -81,10 +89,13 @@ const linesCss = lineLayers.length
   --body: ${style.bodySize}pt;
   --heading: ${style.headingSize}pt;
   --lh: ${style.lineSpacing};
+  --text-align: ${style.textAlign};
+  --heading-align: ${style.headingAlign};
+  --text-color: ${style.textColor};
   font-family: var(--font);
   font-size: var(--body);
   line-height: var(--lh);
-  color: #000;
+  color: var(--text-color);
 }
 
 /* undo the editing-screen styles that don't belong in real pages */
@@ -95,17 +106,22 @@ const linesCss = lineLayers.length
 /* page breaks */
 .prelims-doc > * + * { break-before: page; }
 .paged-doc .break-page { break-before: page; }
-.main-doc > .report-section:first-child { break-before: auto; }
 .paged-doc .report-section { margin-top: 18pt; }
 .paged-doc .report-sub { margin-top: 12pt; }
-.main-doc > .report-section:first-child { margin-top: 0; }
-.paged-doc h2, .paged-doc h3, .paged-doc h4, .paged-doc h5 { font-size: var(--heading); break-after: avoid; }
+.main-doc > .report-section:first-child { break-before: auto; margin-top: 0; }
+${refsBreak}
+
+/* text */
+.paged-doc h2, .paged-doc h3, .paged-doc h4, .paged-doc h5 {
+  font-size: var(--heading); break-after: avoid; text-align: var(--heading-align);
+}
 .paged-doc h2 { text-transform: uppercase; }
+.paged-doc .prelim-title { text-align: center; }
+.paged-doc p { margin: 0 0 8pt; text-align: var(--text-align); }
 .paged-doc figure { break-inside: avoid; margin: 12pt 0; text-align: center; }
 .paged-doc img { max-width: 100%; max-height: 120mm; }
 .paged-doc .table-caption { break-after: avoid; }
 .paged-doc tr { break-inside: avoid; }
-.paged-doc p { margin: 0 0 8pt; text-align: justify; }
 
 /* table of contents */
 .toc { list-style: none; padding: 0; margin: 0; }

@@ -8,12 +8,13 @@ import { computeNumbers } from "../lib/computeNumbers";
 export function buildDocument(report) {
   const labels = computeNumbers(report.sections);
   const hasReferences = report.references.some((r) => r.text.trim());
+  const toc = report.layout.toc ? renderToc(report.sections, labels, hasReferences) : "";
 
   return `<div class="paged-doc">
     <div class="cover-doc">${renderCover(report.cover)}</div>
     <div class="prelims-doc">
       ${renderPrelims(report.prelims)}
-      ${renderToc(report.sections, labels, hasReferences)}
+      ${toc}
     </div>
     <div class="main-doc">
       ${renderSections(report.sections, labels)}

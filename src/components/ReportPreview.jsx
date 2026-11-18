@@ -3,16 +3,20 @@ import { renderPrelims } from "../render/renderPrelims";
 import { renderSections } from "../render/renderSections";
 import { renderReferences } from "../render/renderReferences";
 import { computeNumbers } from "../lib/computeNumbers";
+import { fontOf } from "../data/fonts";
 
 export default function ReportPreview({ report }) {
   const labels = computeNumbers(report.sections);
   const { style } = report;
 
   const vars = {
-    "--font": style.fontFamily,
+    "--font": fontOf(style.fontId).stack,
     "--body": `${style.bodySize}pt`,
     "--heading": `${style.headingSize}pt`,
     "--lh": style.lineSpacing,
+    "--text-align": style.textAlign,
+    "--heading-align": style.headingAlign,
+    "--text-color": style.textColor,
   };
 
   return (

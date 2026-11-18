@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Previewer } from "pagedjs";
 import { buildDocument } from "../render/buildDocument";
 import { buildPagedCss } from "../render/buildPagedCss";
+import { fontOf } from "../data/fonts";
 
 export default function PagedView({ report, onBack }) {
   const holder = useRef(null);
@@ -9,23 +10,36 @@ export default function PagedView({ report, onBack }) {
   const [status, setStatus] = useState("Building pages…");
 
   useEffect(() => {
-    // React runs effects twice in development; this makes sure we build only once
     if (started.current) return;
     started.current = true;
 
-    const template = document.createElement("template");
-    template.innerHTML = buildDocument(report);
+    async function run() {
+      try {
+        const families = [fontOf(report.style.fontId).family, fontOf(report.cover.font).family];
+        await Promise.all(
+          families.flatMap((f) => [
+            document.fonts.load(`12pt ${f}`),
+            document.fonts.load(`bold 12pt ${f}`),
+          ])
+        );
 
-    new Previewer()
-      .preview(template.content, [{ "report.css": buildPagedCss(report) }], holder.current)
-      .then((flow) => setStatus(`${flow.total} pages ready`))
-      .catch((err) => {
+        const template = document.createElement("template");
+        template.innerHTML = buildDocument(report);
+
+        const flow = await new Previewer().preview(
+          template.content,
+          [{ "report.css": buildPagedCss(report) }],
+          holder.current
+        );
+        setStatus(`${flow.total} pages ready`);
+      } catch (err) {
         console.error(err);
         setStatus("Could not build the pages. Check the Console (F12).");
-      });
+      }
+    }
+    run();
 
     return () => {
-      // clean up the styles Paged.js added when we leave this screen
       document
         .querySelectorAll("style[data-pagedjs-inserted-styles]")
         .forEach((el) => el.remove());
