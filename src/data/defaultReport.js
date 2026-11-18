@@ -18,10 +18,16 @@ export function createEmptyReport() {
     references: [],
     style: { fontFamily: "Times New Roman", headingSize: 14, bodySize: 12, lineSpacing: 1.5 },
     pageStyle: {
-  mode: "none",          // "none" | "single" | "double" | "headerFooter"
-  headerText: "",
-  footerText: "",
-  showPageNumber: true,
+  mode: "none",            // "none" | "single" | "double" | "headerFooter"
+  showPageNumber: true,    // used by none / single / double
+  header: { left: "", center: "", right: "" },
+  footer: {
+    left: { kind: "none", text: "" },
+    center: { kind: "none", text: "" },
+    right: { kind: "pageNumber", text: "" },
+  },
+  headerLine: true,
+  footerLine: true,
 },
   };
 }

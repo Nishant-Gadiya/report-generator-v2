@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useReport } from "./state/useReport";
 import ReportPreview from "./components/ReportPreview";
+import PagedView from "./components/PagedView";
 import CoverEditor from "./components/CoverEditor";
 import PrelimsEditor from "./components/PrelimsEditor";
 import SectionsEditor from "./components/SectionsEditor";
@@ -18,11 +19,21 @@ const TABS = [
 export default function App() {
   const { report, setReport, newReport } = useReport();
   const [tab, setTab] = useState("cover");
+  const [view, setView] = useState("edit");
+
+  if (view === "pages") {
+    return <PagedView report={report} onBack={() => setView("edit")} />;
+  }
 
   return (
     <div className="layout">
       <aside className="editor-pane">
-        <button onClick={newReport}>New report</button>
+        <div className="top-actions">
+          <button onClick={newReport}>New report</button>
+          <button className="primary" onClick={() => setView("pages")}>
+            Preview pages / Export PDF
+          </button>
+        </div>
 
         <div className="tabs">
           {TABS.map((t) => (
@@ -42,7 +53,9 @@ export default function App() {
         {tab === "references" && (
           <ReferencesEditor references={report.references} setReport={setReport} />
         )}
-        {tab === "pagestyle" && <PageStyleEditor pageStyle={report.pageStyle} setReport={setReport} />}
+        {tab === "pagestyle" && (
+          <PageStyleEditor pageStyle={report.pageStyle} setReport={setReport} />
+        )}
       </aside>
 
       <main className="preview-pane">

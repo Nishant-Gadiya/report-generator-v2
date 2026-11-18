@@ -1,5 +1,5 @@
 const KEY = "report-generator-v2";
-const SCHEMA_VERSION = 4; // bump this whenever the report structure changes
+const SCHEMA_VERSION = 5; // bump this whenever the report structure changes
 
 export function loadReport() {
   try {

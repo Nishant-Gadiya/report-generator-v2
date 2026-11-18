@@ -6,7 +6,7 @@ export const newBlock = (type) => {
 };
 
 export const newSection = () => ({
-  id: crypto.randomUUID(), title: "", blocks: [], children: [],
+  id: crypto.randomUUID(), title: "", blocks: [], children: [], pageBreak: false,
 });
 
 export const newReference = () => ({ id: crypto.randomUUID(), text: "" });

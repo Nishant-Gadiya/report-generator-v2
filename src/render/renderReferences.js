@@ -15,5 +15,5 @@ export function renderReferences(references) {
   const rows = items
     .map((r, i) => `<li><span class="ref-no">[${i + 1}]</span> ${linkify(esc(r.text))}</li>`)
     .join("");
-  return `<section class="report-section references"><h2>REFERENCES</h2><ol>${rows}</ol></section>`;
+  return `<section class="report-section references"><h2 id="references-heading">REFERENCES</h2><ol>${rows}</ol></section>`;
 }

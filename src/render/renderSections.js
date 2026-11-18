@@ -33,8 +33,9 @@ function renderContainer(node, labels, depth) {
   const label = depth === 1 ? `${labels[node.id]}.` : labels[node.id];
   const blocks = node.blocks.map((b) => renderBlock(b, labels)).join("");
   const kids = node.children.map((c) => renderContainer(c, labels, depth + 1)).join("");
-  return `<div class="${depth === 1 ? "report-section" : "report-sub"}">
-    <h${level}>${label} ${esc(node.title)}</h${level}>${blocks}${kids}
+ const kind = depth === 1 ? "report-section" : "report-sub";
+return `<div class="${kind}${node.pageBreak ? " break-page" : ""}">
+    <h${level} id="sec-${node.id}">${label} ${esc(node.title)}</h${level}>${blocks}${kids}
   </div>`;
 }
 

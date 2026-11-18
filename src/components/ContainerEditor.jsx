@@ -37,6 +37,17 @@ export default function ContainerEditor({ container, labels, change, depth = 1 }
         onChange={(e) => change((s) => updateContainer(s, id, { title: e.target.value }))}
       />
 
+      <label className="break-toggle">
+  <input
+    type="checkbox"
+    checked={!!container.pageBreak}
+    onChange={(e) =>
+      change((s) => updateContainer(s, id, { pageBreak: e.target.checked }))
+    }
+  />
+  Start on a new page
+</label>
+
       <AddBlockBar
         onAdd={(type) => change((s) => addBlock(s, id, type, 0))}
         onAddSub={container.blocks.length === 0 ? addSub : undefined}

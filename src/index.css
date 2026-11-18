@@ -101,3 +101,30 @@ body { margin: 0; font-family: sans-serif; background: #e5e7eb; }
 }
 
 .ref-link { color: #0000ee; text-decoration: underline; word-break: break-all; }
+
+.top-actions { display: flex; gap: 8px; }
+.top-actions .primary { background: #4338ca; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
+
+.paged-toolbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 16px; background: #fff; border-bottom: 1px solid #ccc;
+}
+.paged-holder { padding-top: 64px; }
+
+@media screen {
+  .pagedjs_pages { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .pagedjs_page { background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); }
+}
+@media print {
+  .paged-toolbar { display: none; }
+  .paged-holder { padding-top: 0; }
+  body { background: #fff; }
+}
+
+.break-toggle { display: flex; gap: 6px; align-items: center; font-size: 13px; color: #555; margin: 4px 0; }
+
+.hf-row { display: flex; gap: 6px; align-items: center; margin: 6px 0; }
+.hf-label { width: 52px; font-size: 13px; color: #555; }
+.hf-row input { flex: 1; min-width: 0; }
+.prelim-card h4 { margin: 14px 0 4px; }
