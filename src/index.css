@@ -132,3 +132,16 @@ body { margin: 0; font-family: sans-serif; background: #e5e7eb; }
 .body-page, .prelim-page { text-align: var(--text-align, justify); color: var(--text-color, #000); }
 .body-page h2, .body-page h3, .body-page h4, .body-page h5 { text-align: var(--heading-align, left); }
 .tabs { flex-wrap: wrap; }
+
+.seg { display: inline-flex; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: #fff; padding: 5px 10px; cursor: pointer; font-size: 13px; }
+.seg button.active { background: #1e293b; color: #fff; }
+
+.field-row { display: flex; gap: 8px; align-items: center; margin: 6px 0; flex-wrap: wrap; }
+.field-row input:not([type]), .field-row input[type="text"] { flex: 1; min-width: 80px; }
+.editor-top { flex-wrap: wrap; align-items: center; }
+
+.students-table { width: 85%; margin: 0 auto; border-collapse: collapse; text-align: left; }
+.students-table th, .students-table td { padding: 3pt 6pt; }
+.students-table th { text-align: center; }
+.students-table.bordered th, .students-table.bordered td { border: 1px solid #000; }

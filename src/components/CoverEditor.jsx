@@ -1,6 +1,9 @@
 import SlotRow from "./SlotRow";
 import StudentsEditor from "./StudentsEditor";
 import ImageUpload from "./ImageUpload";
+import Segmented from "./Segmented";
+import { FONTS } from "../data/fonts";
+import { VTU_STYLE } from "../data/coverPresets";
 
 const ZONE_LABELS = { top: "Top", middle: "Middle", bottom: "Bottom" };
 
@@ -28,6 +31,14 @@ export default function CoverEditor({ cover, setReport }) {
       return { ...r, cover: { ...r.cover, images } };
     });
 
+  const resetCover = () => {
+    if (!window.confirm("Reset the cover to the default layout? The text on the cover will reset too (your students and logos stay).")) return;
+    setReport((r) => ({
+      ...r,
+      cover: { ...structuredClone(VTU_STYLE), students: r.cover.students, images: r.cover.images },
+    }));
+  };
+
   return (
     <div className="cover-editor">
       <div className="editor-top">
@@ -40,6 +51,14 @@ export default function CoverEditor({ cover, setReport }) {
           </select>
         </label>
         <label>
+          Font{" "}
+          <select value={cover.font} onChange={(e) => updateCover({ font: e.target.value })}>
+            {FONTS.map((f) => (
+              <option key={f.id} value={f.id}>{f.label}</option>
+            ))}
+          </select>
+        </label>
+        <label>
           Accent color{" "}
           <input
             type="color"
@@ -47,6 +66,7 @@ export default function CoverEditor({ cover, setReport }) {
             onChange={(e) => updateCover({ accent: e.target.value })}
           />
         </label>
+        <button type="button" onClick={resetCover}>Reset cover</button>
       </div>
 
       {Object.keys(ZONE_LABELS).map((zone) => (
@@ -65,10 +85,56 @@ export default function CoverEditor({ cover, setReport }) {
                   onChange={(url) => setImage(slot.id, url)}
                 />
               ) : slot.type === "students" ? (
-                <StudentsEditor
-                  students={cover.students}
-                  onChange={(students) => updateCover({ students })}
-                />
+                <div>
+                  <div className="field-row">
+                    <Segmented
+                      value={slot.layout ?? "plain"}
+                      options={[
+                        { value: "plain", label: "List" },
+                        { value: "table", label: "Table" },
+                      ]}
+                      onChange={(layout) => updateSlot(zone, slot.id, { layout })}
+                    />
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={slot.showUsn}
+                        onChange={(e) => updateSlot(zone, slot.id, { showUsn: e.target.checked })}
+                      />{" "}
+                      USN column
+                    </label>
+                  </div>
+
+                  {slot.layout === "table" && (
+                    <div className="field-row">
+                      <input
+                        placeholder="Name column title"
+                        value={slot.nameHeading ?? "Name"}
+                        onChange={(e) => updateSlot(zone, slot.id, { nameHeading: e.target.value })}
+                      />
+                      {slot.showUsn && (
+                        <input
+                          placeholder="USN column title"
+                          value={slot.usnHeading ?? "USN"}
+                          onChange={(e) => updateSlot(zone, slot.id, { usnHeading: e.target.value })}
+                        />
+                      )}
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={slot.tableBorders}
+                          onChange={(e) => updateSlot(zone, slot.id, { tableBorders: e.target.checked })}
+                        />{" "}
+                        Borders
+                      </label>
+                    </div>
+                  )}
+
+                  <StudentsEditor
+                    students={cover.students}
+                    onChange={(students) => updateCover({ students })}
+                  />
+                </div>
               ) : (
                 <textarea
                   rows={slot.text.includes("\n") ? 3 : 1}

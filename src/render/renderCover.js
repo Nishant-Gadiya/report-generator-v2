@@ -1,23 +1,38 @@
-const esc = (s = "") =>
-  String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+import { esc } from "../lib/escape";
+import { fontOf } from "../data/fonts";
 
 const colorOf = (slot, cover) =>
   slot.color === "accent" ? cover.accent : slot.color === "text" ? "#000" : slot.color;
 
 function renderStudents(slot, cover) {
+  const style = `font-size:${slot.size}pt;font-weight:${slot.bold ? 700 : 400};color:${colorOf(slot, cover)}`;
+
+  if (slot.layout === "table") {
+    const head = `<tr><th>${esc(slot.nameHeading ?? "Name")}</th>${
+      slot.showUsn ? `<th>${esc(slot.usnHeading ?? "USN")}</th>` : ""
+    }</tr>`;
+    const body = cover.students
+      .map(
+        (s) =>
+          `<tr><td>${esc(s.name)}</td>${slot.showUsn ? `<td>${esc(s.usn)}</td>` : ""}</tr>`
+      )
+      .join("");
+    return `<table class="students-table ${slot.tableBorders ? "bordered" : ""}" style="${style}">${head}${body}</table>`;
+  }
+
   const rows = cover.students
     .map(
-      (s) => `<div class="student-row">
-        <span>${esc(s.name)}</span>
-        ${slot.showUsn ? `<span>${esc(s.usn)}</span>` : ""}
-      </div>`
+      (s) => `<div class="student-row"><span>${esc(s.name)}</span>${
+        slot.showUsn ? `<span>${esc(s.usn)}</span>` : ""
+      }</div>`
     )
     .join("");
-  return `<div class="students" style="font-size:${slot.size}pt;font-weight:${slot.bold ? 700 : 400};color:${colorOf(slot, cover)}">${rows}</div>`;
+  return `<div class="students" style="${style}">${rows}</div>`;
 }
 
 function renderSlot(slot, cover) {
   if (!slot.on) return "";
+
   if (slot.type === "image") {
     const src = cover.images?.[slot.id];
     return src ? `<img src="${src}" style="width:${slot.width}px;align-self:center">` : "";
@@ -33,5 +48,6 @@ export function renderCover(cover) {
   const zone = (name) =>
     `<div class="cover-zone zone-${name}">${cover.zones[name].map((s) => renderSlot(s, cover)).join("")}</div>`;
   const borderClass = !cover.border || cover.border === "none" ? "" : `cover-${cover.border}`;
-  return `<section class="cover ${borderClass}">${zone("top")}${zone("middle")}${zone("bottom")}</section>`;
+  const font = fontOf(cover.font).stack;
+  return `<section class="cover ${borderClass}" style="font-family:${font}">${zone("top")}${zone("middle")}${zone("bottom")}</section>`;
 }
