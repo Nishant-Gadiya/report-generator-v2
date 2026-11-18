@@ -1,6 +1,7 @@
 // src/data/coverPresets.js
 export const VTU_STYLE = {
-  accent: "#9b2d2d",          // one color the user can change for every "accent" line
+  accent: "#9b2d2d",  
+  font: "times",        // one color the user can change for every "accent" line
   border: "double",
   zones: {
     top: [
@@ -18,7 +19,7 @@ export const VTU_STYLE = {
       { id: "branch",     on: true, text: "INFORMATION SCIENCE AND ENGINEERING", size: 18, bold: true, color: "accent" },
       { id: "acYear",     on: true, text: "For the Academic Year 2026-2027", size: 14, bold: true, color: "text" },
       { id: "submitted",  off: true, text: "Submitted by", size: 13, bold: true, color: "text" },
-      { id: "students",   type: "students", on: true, size: 16, bold: true, color: "accent", showUsn: true },
+     { id: "students", type: "students", on: true, size: 16, bold: true, color: "accent", showUsn: true, layout: "plain", nameHeading: "Name", usnHeading: "USN", tableBorders: true },
       { id: "guideHead",  on: true, text: "Under the Guidance of", size: 14, bold: true, color: "text" },
       { id: "guide",      on: true, text: "Guide Name\nDesignation,\nDept. of ISE, JSSATE", size: 14, bold: true, color: "text" },
     ],
