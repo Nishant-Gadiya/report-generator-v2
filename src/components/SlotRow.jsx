@@ -1,6 +1,14 @@
 const SIZES = [8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 26, 28, 32, 36];
 
-export default function SlotRow({ slot, onChange, children }) {
+export default function SlotRow({ slot, onChange, compact, children }) {
+  if (compact) {
+    return (
+      <div className="slot-row slot-compact">
+        <div className="slot-main">{children}</div>
+      </div>
+    );
+  }
+
   const colorMode = ["accent", "text"].includes(slot.color) ? slot.color : "custom";
 
   return (
@@ -13,9 +21,7 @@ export default function SlotRow({ slot, onChange, children }) {
         />
       </label>
 
-      <div className="slot-main">
-        {children /* the text box, image upload, or students list goes here */}
-      </div>
+      <div className="slot-main">{children}</div>
 
       {slot.type !== "image" && (
         <div className="slot-style">

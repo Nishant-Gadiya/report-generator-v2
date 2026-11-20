@@ -160,3 +160,6 @@ body { margin: 0; font-family: sans-serif; background: #e5e7eb; }
 .mini-body i { display: block; height: 3px; background: #cbd5e1; border-radius: 2px; }
 .summary-list { list-style: none; margin: 0; padding: 0; font-size: 13px; line-height: 1.9; color: #334155; }
 .summary-list b { display: inline-block; width: 104px; color: #0f172a; }
+
+.custom-toggle { display: flex; gap: 8px; align-items: center; font-weight: 700; margin: 10px 0 4px; }
+.slot-compact { border-bottom: none; padding: 3px 0; }
