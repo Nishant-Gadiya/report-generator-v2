@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ZoomIn, ZoomOut } from "lucide-react";
 import { useReport } from "./state/useReport";
 import { loadReport } from "./lib/storage";
 import { readProject, downloadProject } from "./lib/projectFile";
@@ -6,6 +7,7 @@ import { checkReport } from "./lib/checkReport";
 import ReportPreview from "./components/ReportPreview";
 import PagedView from "./components/PagedView";
 import StartScreen from "./components/StartScreen";
+import TopBar from "./components/TopBar";
 import StepRail from "./components/StepRail";
 import ExportCheck from "./components/ExportCheck";
 import CoverEditor from "./components/CoverEditor";
@@ -17,13 +19,14 @@ import LayoutEditor from "./components/LayoutEditor";
 
 const STEPS = [
   { id: "cover", label: "Cover", title: "Cover page", hint: "Edit the text. Open “Customize” to change fonts, colors or hide lines." },
-  { id: "front", label: "Front pages", title: "Acknowledgement and abstract", hint: "Both are optional. Tick the ones you need." },
+  { id: "front", label: "Front pages", title: "Acknowledgement and abstract", hint: "Both are optional. Switch on the ones you need." },
   { id: "content", label: "Content", title: "Sections", hint: "Add sections, then add text, images and tables in any order." },
   { id: "refs", label: "References", title: "References", hint: "Type each reference. Web addresses become links." },
   { id: "design", label: "Design", title: "Text style and page layout", hint: "Defaults follow the standard format. Change only if your college asks." },
 ];
 
 const countSections = (list) => list.reduce((n, s) => n + 1 + countSections(s.children), 0);
+const clampZoom = (z) => Math.min(1.5, Math.max(0.5, Math.round(z * 10) / 10));
 
 export default function App() {
   const { report, setReport, saveOk, startFrom, replaceReport } = useReport();
@@ -32,6 +35,7 @@ export default function App() {
   const [step, setStep] = useState("cover");
   const [issues, setIssues] = useState(null);
   const [notice, setNotice] = useState("");
+  const [zoom, setZoom] = useState(0.8);
 
   function show(msg) {
     setNotice(msg);
@@ -85,27 +89,21 @@ export default function App() {
   } else {
     screen = (
       <div className="layout">
-        <StepRail
-          steps={STEPS}
-          current={step}
-          onSelect={setStep}
-          badges={badges}
+        <TopBar
           saveOk={saveOk}
           onNew={() => setView("start")}
           onSave={() => downloadProject(report)}
           onOpen={openFile}
+          onExport={exportClick}
         />
+
+        <StepRail steps={STEPS} current={step} onSelect={setStep} badges={badges} />
 
         <section className="editor-pane">
           <header className="pane-head">
-            <div>
-              <div className="step-count">Step {idx + 1} of {STEPS.length}</div>
-              <h2>{current.title}</h2>
-              <p className="hint">{current.hint}</p>
-            </div>
-            <button type="button" className="primary" onClick={exportClick}>
-              Export PDF
-            </button>
+            <div className="step-count">Step {idx + 1} of {STEPS.length}</div>
+            <h2>{current.title}</h2>
+            <p className="hint">{current.hint}</p>
           </header>
 
           <div className="pane-body">
@@ -146,7 +144,21 @@ export default function App() {
         </section>
 
         <main className="preview-pane">
-          <ReportPreview report={report} />
+          <div className="preview-bar">
+            <span>Live preview. Exact page breaks appear in the exported PDF.</span>
+            <div className="zoom">
+              <button type="button" className="ghost" onClick={() => setZoom((z) => clampZoom(z - 0.1))} title="Zoom out">
+                <ZoomOut size={15} />
+              </button>
+              <span>{Math.round(zoom * 100)}%</span>
+              <button type="button" className="ghost" onClick={() => setZoom((z) => clampZoom(z + 0.1))} title="Zoom in">
+                <ZoomIn size={15} />
+              </button>
+            </div>
+          </div>
+          <div className="preview-zoom" style={{ zoom }}>
+            <ReportPreview report={report} />
+          </div>
         </main>
       </div>
     );

@@ -1,0 +1,240 @@
+/* ============ design tokens: change the look here ============ */
+:root {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --border: #e4e7ec;
+  --border-strong: #cfd4dc;
+  --text: #101828;
+  --muted: #667085;
+  --accent: #4f46e5;
+  --accent-strong: #4338ca;
+  --accent-soft: #eef2ff;
+  --success: #15803d;
+  --danger: #b42318;
+  --radius: 10px;
+  --radius-sm: 7px;
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 8px 24px rgba(16, 24, 40, 0.14);
+  --ui-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body { background: var(--bg); }
+
+/* the app's own screens use the UI font; report pages keep their own fonts */
+.topbar, .rail, .editor-pane, .preview-bar, .modal, .start, .toast, .paged-toolbar {
+  font-family: var(--ui-font);
+  color: var(--text);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ buttons ============ */
+:where(button) {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
+}
+:where(button:hover) { background: var(--surface-2); border-color: #b8bfca; }
+
+.primary {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent-strong);
+  box-shadow: var(--shadow-sm);
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+}
+.primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+
+.ghost { background: transparent; border-color: transparent; color: #344054; }
+.ghost:hover { background: #f2f4f7; border-color: transparent; }
+
+:where(button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* ============ form controls ============ */
+:where(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]),
+  textarea,
+  select
+) {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 6px 9px;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+:where(input, textarea, select):focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  outline: none;
+}
+textarea { resize: vertical; line-height: 1.45; }
+input[type="color"] {
+  width: 34px; height: 28px; padding: 2px;
+  border: 1px solid var(--border-strong); border-radius: 6px; background: #fff; cursor: pointer;
+}
+input[type="checkbox"] { accent-color: var(--accent); }
+
+/* toggle switches for the main on/off options */
+.prelim-toggle input[type="checkbox"],
+.custom-toggle input[type="checkbox"],
+.break-toggle input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 34px; height: 20px; margin: 0;
+  border-radius: 999px;
+  background: #cbd5e1;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.prelim-toggle input[type="checkbox"]::after,
+.custom-toggle input[type="checkbox"]::after,
+.break-toggle input[type="checkbox"]::after {
+  content: "";
+  position: absolute; top: 2px; left: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s;
+}
+.prelim-toggle input[type="checkbox"]:checked,
+.custom-toggle input[type="checkbox"]:checked,
+.break-toggle input[type="checkbox"]:checked { background: var(--accent); }
+.prelim-toggle input[type="checkbox"]:checked::after,
+.custom-toggle input[type="checkbox"]:checked::after,
+.break-toggle input[type="checkbox"]:checked::after { transform: translateX(14px); }
+.prelim-toggle, .custom-toggle, .break-toggle { gap: 10px; }
+
+/* segmented choice buttons */
+.seg { display: inline-flex; gap: 2px; padding: 2px; background: #eef0f4; border: 0; border-radius: 9px; overflow: visible; }
+.seg button { border: 0; background: transparent; padding: 5px 11px; border-radius: 7px; font-size: 13px; color: var(--muted); }
+.seg button:hover { background: rgba(255, 255, 255, 0.6); color: var(--text); }
+.seg button.active { background: #fff; color: var(--text); font-weight: 600; box-shadow: var(--shadow-sm); }
+
+.hint { color: var(--muted); font-size: 12.5px; }
+
+/* ============ app layout ============ */
+.layout {
+  display: grid;
+  grid-template-columns: 210px minmax(380px, 460px) 1fr;
+  grid-template-rows: 56px minmax(0, 1fr);
+  height: 100vh;
+  background: var(--bg);
+}
+
+/* top bar */
+.topbar {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 0 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
+.brand-mark { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--accent); color: #fff; font-size: 14px; }
+.save-state { display: flex; align-items: center; gap: 6px; font-size: 12.5px; }
+.save-state.ok { color: var(--success); }
+.save-state.bad { color: var(--danger); }
+.topbar-actions { display: flex; align-items: center; gap: 4px; }
+
+/* step list */
+.rail { background: var(--surface); border-right: 1px solid var(--border); padding: 14px 10px; display: flex; flex-direction: column; min-height: 0; overflow-y: auto; }
+.rail-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.rail-steps button { justify-content: flex-start; width: 100%; gap: 10px; padding: 9px 10px; border: 0; background: transparent; border-radius: 8px; color: #475467; font-size: 14px; font-weight: 500; text-align: left; }
+.rail-steps button:hover { background: var(--surface-2); }
+.rail-steps button.active { background: var(--accent-soft); color: var(--accent-strong); font-weight: 600; }
+.rail-icon { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 7px; background: #f2f4f7; color: #667085; flex-shrink: 0; }
+.rail-steps button.active .rail-icon { background: var(--accent); color: #fff; }
+.rail-label { flex: 1; }
+.rail-badge { background: #eef0f4; color: #475467; border-radius: 999px; padding: 0 8px; font-size: 11px; font-weight: 600; }
+.rail-tip { font-size: 12px; color: var(--muted); margin: 12px 6px 0; }
+
+/* editor column */
+.editor-pane { background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; min-height: 0; overflow: hidden; padding: 0; }
+.pane-head { display: block; padding: 16px 20px 14px; border-bottom: 1px solid var(--border); }
+.pane-head h2 { margin: 2px 0 2px; font-size: 19px; font-weight: 650; letter-spacing: -0.01em; }
+.pane-head .hint { margin: 0; }
+.step-count { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-weight: 600; }
+.pane-body { flex: 1; overflow-y: auto; padding: 14px 20px 24px; }
+.step-nav { display: flex; justify-content: space-between; padding: 12px 20px; border-top: 1px solid var(--border); background: var(--surface); }
+
+/* cards */
+.prelim-card, .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin: 12px 0; box-shadow: var(--shadow-sm); }
+.subsection-card { margin: 12px 0 4px 12px; padding: 2px 0 0 14px; border: 0; border-left: 2px solid var(--border); border-radius: 0; background: none; }
+.block-box { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin: 8px 0; }
+.fold { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.fold > summary { font-weight: 600; }
+.card-head strong { font-size: 14px; }
+.block-head > span:first-child { font-size: 12px; font-weight: 600; color: var(--accent-strong); background: var(--accent-soft); padding: 1px 9px; border-radius: 999px; }
+.card-head button, .block-head button { padding: 2px 8px; font-size: 12px; }
+.title-input { font-weight: 600; font-size: 14px; padding: 8px 10px; }
+.slot-row { border-bottom: 1px solid #f2f4f7; padding: 8px 0; }
+.slot-compact { border-bottom: 0; padding: 4px 0; }
+.editor-top { gap: 12px; }
+.cover-editor h3 { color: var(--muted); font-size: 11px; letter-spacing: 0.07em; }
+
+/* "add" buttons */
+.add-bar button { border-style: dashed; background: transparent; color: var(--muted); padding: 3px 10px; font-size: 12px; border-radius: 999px; }
+.add-bar button:hover { color: var(--accent-strong); border-color: var(--accent); background: var(--accent-soft); }
+.add-section { width: 100%; padding: 10px; margin-top: 6px; border: 1px dashed var(--accent); background: var(--accent-soft); color: var(--accent-strong); font-weight: 600; }
+.add-section:hover { background: #e0e7ff; }
+
+/* layout summary */
+.summary { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); }
+
+/* ============ preview column ============ */
+.preview-pane { background: #e9ebef; min-height: 0; overflow: auto; position: relative; }
+.preview-bar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 7px 16px;
+  background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px; color: var(--muted);
+}
+.zoom { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--text); }
+.zoom button { padding: 4px 6px; }
+.preview-zoom { padding: 4px 0 48px; }
+.preview-pane .page { box-shadow: 0 1px 3px rgba(16, 24, 40, 0.12), 0 8px 24px rgba(16, 24, 40, 0.08); }
+
+/* ============ start screen, popup, toast ============ */
+.start { background: var(--bg); }
+.start h1 { font-size: 28px; letter-spacing: -0.02em; }
+.start-card { border-radius: 14px; box-shadow: var(--shadow-sm); }
+.start-card:hover { border-color: var(--accent); box-shadow: 0 6px 20px rgba(79, 70, 229, 0.16); background: var(--surface); }
+.modal { border-radius: 14px; box-shadow: var(--shadow-md); }
+.toast { border-radius: 10px; box-shadow: var(--shadow-md); }
+
+/* ============ pages view toolbar ============ */
+.paged-toolbar { background: rgba(255, 255, 255, 0.95); box-shadow: var(--shadow-sm); }
+
+/* thin scrollbars */
+.pane-body, .preview-pane, .rail { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+
+/* smaller laptops: collapse the step list to icons */
+@media (max-width: 1150px) {
+  .layout { grid-template-columns: 64px 380px 1fr; }
+  .rail-label, .rail-badge, .rail-tip { display: none; }
+  .rail-steps button { justify-content: center; padding: 8px; }
+}
