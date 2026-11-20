@@ -1,5 +1,6 @@
 // src/data/coverPresets.js
 export const VTU_STYLE = {
+  presetId: "vtu",
   accent: "#9b2d2d",  
   font: "times",        // one color the user can change for every "accent" line
   border: "double",
@@ -32,3 +33,32 @@ export const VTU_STYLE = {
     ],
   },
 };
+
+export const SIMPLE_STYLE = {
+  presetId: "simple",
+  accent: "#1e3a8a",
+  font: "times",
+  border: "double",
+  zones: {
+    top: [
+      { id: "org", on: true, text: "NATIONAL SERVICE SCHEME", size: 20, bold: true, color: "accent" },
+      { id: "orgSub", on: true, text: "JSS Academy of Technical Education, Bengaluru", size: 14, bold: true, color: "text" },
+      { id: "logo1", type: "image", on: true, width: 110 },
+    ],
+    middle: [
+      { id: "reportType", on: true, text: "ACTIVITY REPORT", size: 18, bold: true, color: "accent" },
+      { id: "title", on: true, text: "Title of the activity", size: 20, bold: true, color: "text", quotes: true },
+      { id: "event", on: true, text: "Held on: date, venue", size: 13, bold: false, color: "text" },
+      { id: "submitted", on: true, text: "Submitted by", size: 13, bold: true, color: "text" },
+      { id: "students", type: "students", on: true, size: 14, bold: false, color: "text", showUsn: true, layout: "table", nameHeading: "Name", usnHeading: "USN", tableBorders: true },
+      { id: "guideHead", on: true, text: "Under the guidance of", size: 14, bold: true, color: "text" },
+      { id: "guide", on: true, text: "Programme Officer Name\nDesignation", size: 14, bold: true, color: "text" },
+    ],
+    bottom: [
+      { id: "dept", on: true, text: "DEPARTMENT OF …", size: 14, bold: true, color: "text" },
+      { id: "year", on: true, text: "Academic Year 2026-2027", size: 13, bold: true, color: "text" },
+    ],
+  },
+};
+
+export const COVER_PRESETS = { vtu: VTU_STYLE, simple: SIMPLE_STYLE };

@@ -1,4 +1,4 @@
-import { VTU_STYLE } from "./coverPresets";
+import { COVER_PRESETS } from "./coverPresets";
 
 export const DEFAULT_STYLE = {
   fontId: "times",
@@ -10,10 +10,10 @@ export const DEFAULT_STYLE = {
   textColor: "#000000",
 };
 
-export function createEmptyReport() {
+export function createEmptyReport(presetId = "vtu") {
   return {
     cover: {
-      ...structuredClone(VTU_STYLE),
+      ...structuredClone(COVER_PRESETS[presetId] ?? COVER_PRESETS.vtu),
       students: [
         { id: crypto.randomUUID(), name: "Student Name 1", usn: "USN" },
         { id: crypto.randomUUID(), name: "Student Name 2", usn: "USN" },
