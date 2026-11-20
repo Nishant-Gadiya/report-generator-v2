@@ -3,7 +3,7 @@ import { Previewer } from "pagedjs";
 import { buildDocument } from "../render/buildDocument";
 import { buildPagedCss } from "../render/buildPagedCss";
 import { fontOf } from "../data/fonts";
-
+import { numberPages } from "../lib/numbering";
 export default function PagedView({ report, onBack }) {
   const holder = useRef(null);
   const started = useRef(false);
@@ -31,6 +31,8 @@ export default function PagedView({ report, onBack }) {
           [{ "report.css": buildPagedCss(report) }],
           holder.current
         );
+        numberPages(holder.current);
+
         setStatus(`${flow.total} pages ready`);
       } catch (err) {
         console.error(err);

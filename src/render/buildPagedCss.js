@@ -33,11 +33,11 @@ export function buildPagedCss(report) {
           css += box(`bottom-${pos}`, cssStr(slot.text), "10pt");
         }
         if (slot.kind === "pageNumber") {
-          css += box(`bottom-${pos}`, `counter(page${numberFormat})`, "11pt");
+          css += box(`bottom-${pos}`, "var(--page-label)", "11pt");
         }
       });
     } else if (ps.showPageNumber) {
-      css += box("bottom-center", `counter(page${numberFormat})`, "11pt");
+      css += box("bottom-center", "var(--page-label)", "11pt");
     }
     return css;
   };
@@ -81,8 +81,8 @@ export function buildPagedCss(report) {
 @page main { margin: ${m.v}mm ${m.h}mm; ${margins("")} }
 
 .cover-doc { page: cover; }
-.prelims-doc { page: prelims; counter-reset: page 1; }
-.main-doc { page: main; counter-reset: page 1; }
+.prelims-doc { page: prelims; }
+.main-doc { page: main; }
 
 .paged-doc {
   --font: ${font};
@@ -101,7 +101,7 @@ export function buildPagedCss(report) {
 /* undo the editing-screen styles that don't belong in real pages */
 .paged-doc .page { width: auto; min-height: 0; margin: 0; padding: 0; box-shadow: none; background: none; }
 .paged-doc .prelim-page { padding: 0; }
-.paged-doc .cover { height: 275mm; }
+.paged-doc .cover { height: 272mm; line-height: 1.25; }
 
 /* page breaks */
 .prelims-doc > * + * { break-before: page; }
@@ -127,7 +127,7 @@ ${refsBreak}
 .toc { list-style: none; padding: 0; margin: 0; }
 .toc li { margin: 4pt 0; }
 .toc a { display: flex; justify-content: space-between; gap: 8pt; color: inherit; text-decoration: none; }
-.toc a::after { content: target-counter(attr(href), page); }
+.toc-page { white-space: nowrap; }
 .toc-d2 { padding-left: 14pt; }
 .toc-d3 { padding-left: 28pt; }
 .toc-d4 { padding-left: 42pt; }

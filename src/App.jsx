@@ -6,14 +6,16 @@ import CoverEditor from "./components/CoverEditor";
 import PrelimsEditor from "./components/PrelimsEditor";
 import SectionsEditor from "./components/SectionsEditor";
 import ReferencesEditor from "./components/ReferencesEditor";
-import PageStyleEditor from "./components/PageStyleEditor";
+import StyleEditor from "./components/StyleEditor";
+import LayoutEditor from "./components/LayoutEditor";
 
 const TABS = [
   { id: "cover", label: "Cover" },
   { id: "prelims", label: "Prelims" },
   { id: "sections", label: "Sections" },
   { id: "references", label: "References" },
-  { id: "pagestyle", label: "Page style" },
+  { id: "text", label: "Text style" },
+  { id: "layout", label: "Layout" },
 ];
 
 export default function App() {
@@ -53,9 +55,8 @@ export default function App() {
         {tab === "references" && (
           <ReferencesEditor references={report.references} setReport={setReport} />
         )}
-        {tab === "pagestyle" && (
-          <PageStyleEditor pageStyle={report.pageStyle} setReport={setReport} />
-        )}
+        {tab === "text" && <StyleEditor style={report.style} setReport={setReport} />}
+        {tab === "layout" && <LayoutEditor report={report} setReport={setReport} />}
       </aside>
 
       <main className="preview-pane">

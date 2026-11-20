@@ -145,3 +145,18 @@ body { margin: 0; font-family: sans-serif; background: #e5e7eb; }
 .students-table th, .students-table td { padding: 3pt 6pt; }
 .students-table th { text-align: center; }
 .students-table.bordered th, .students-table.bordered td { border: 1px solid #000; }
+
+.summary { display: flex; gap: 16px; align-items: flex-start; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; margin: 10px 0; background: #f8fafc; }
+.mini-page { width: 120px; aspect-ratio: 210 / 297; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.25); box-sizing: border-box; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; flex-shrink: 0; }
+.mini-single { outline: 1px solid #000; outline-offset: -4px; }
+.mini-double { outline: 3px double #000; outline-offset: -5px; }
+.mini-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; font-size: 6px; min-height: 8px; }
+.mini-row span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mini-row span:nth-child(2) { text-align: center; }
+.mini-row span:nth-child(3) { text-align: right; }
+.line-b { border-bottom: 1px solid #000; padding-bottom: 2px; }
+.line-t { border-top: 1px solid #000; padding-top: 2px; }
+.mini-body { display: flex; flex-direction: column; gap: 4px; }
+.mini-body i { display: block; height: 3px; background: #cbd5e1; border-radius: 2px; }
+.summary-list { list-style: none; margin: 0; padding: 0; font-size: 13px; line-height: 1.9; color: #334155; }
+.summary-list b { display: inline-block; width: 104px; color: #0f172a; }
